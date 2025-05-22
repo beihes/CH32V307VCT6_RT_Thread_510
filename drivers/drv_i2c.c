@@ -217,150 +217,71 @@ rt_err_t rt_hw_i2c_writeOneByte_end (I2C_TypeDef *i2cx, rt_uint8_t dataToWrite) 
     return result;
 }
 
-static int i2c_read (I2C_TypeDef *i2c_periph, rt_uint16_t addr, rt_uint8_t flags, rt_uint16_t len, rt_uint8_t *buf) {
-    rt_uint16_t try = 0;
-    while (I2C_GetFlagStatus (i2c_periph, I2C_FLAG_BUSY))
-        if (try++ >= HWI2C_TIMEOUT)
-            return -RT_ERROR;
-
-    I2C_GenerateSTART (i2c_periph, ENABLE);
-
-    try = 0;
-    while (!I2C_CheckEvent (i2c_periph, I2C_EVENT_MASTER_MODE_SELECT))  // EVT5
-        if (try++ >= HWI2C_TIMEOUT)
-            return -RT_ERROR;
-
-    if (flags & RT_I2C_ADDR_10BIT)                        // 10-bit address mode
-    {
-        rt_uint8_t frame_head = 0xF0 + (addr >> 8) << 1;  // 11110XX0
-        I2C_SendData (i2c_periph, frame_head);            // FrameHead
-
-        try = 0;
-        while (!I2C_CheckEvent (i2c_periph, I2C_EVENT_MASTER_MODE_ADDRESS10))  // EVT9
-            if (try++ >= HWI2C_TIMEOUT)
-                return -RT_ERROR;
-
-        I2C_SendData (i2c_periph, 0xff & addr);
-
-        try = 0;
-        while (!I2C_CheckEvent (i2c_periph, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))  // EVT6
-            if (try++ >= HWI2C_TIMEOUT)
-                return -RT_ERROR;
-
-        I2C_GenerateSTART (i2c_periph, ENABLE);  // Sr
-
-        try = 0;
-        while (!I2C_CheckEvent (i2c_periph, I2C_EVENT_MASTER_MODE_SELECT))  // EVT5
-            if (try++ >= HWI2C_TIMEOUT)
-                return -RT_ERROR;
-
-        I2C_SendData (i2c_periph, frame_head);  // Resend FrameHead
-    } else {
-        I2C_Send7bitAddress (i2c_periph, addr << 1, I2C_Direction_Receiver);
+static rt_err_t i2c_read (ch32_i2c_device_t device, rt_uint16_t readAddr, rt_uint8_t flags, rt_uint16_t len, rt_uint8_t *buf) {
+    rt_err_t result = RT_EOK;
+    rt_uint8_t *midBuf = buf;
+    while (len--) {
+        result = rt_hw_i2c_readOneByte_start (device->i2cx, device->nowDeviceAddr);
+        if (flags & RT_I2C_ADDR_10BIT) {
+            result = rt_hw_i2c_readOneByte_16bit (device->i2cx, readAddr);
+        } else {
+            result = rt_hw_i2c_readOneByte_8bit (device->i2cx, readAddr);
+        }
+        midBuf[0] = rt_hw_i2c_readOneByte_end (device->i2cx, device->nowDeviceAddr);
+        midBuf++;
+        readAddr++;
     }
-
-    try = 0;
-    while (!I2C_CheckEvent (i2c_periph, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED))  // EVT6
-        if (try++ >= HWI2C_TIMEOUT)
-            return -RT_ERROR;
-
-    while (len-- > 0) {
-
-        try = 0;
-        while (!I2C_GetFlagStatus (i2c_periph, I2C_FLAG_RXNE))  // Got ACK For the Last Byte
-            if (try++ >= HWI2C_TIMEOUT)
-                return -RT_ERROR;
-
-        *(buf++) = I2C_ReceiveData (i2c_periph);
-    }
-
-    I2C_GenerateSTOP (i2c_periph, ENABLE);
+    return result;
 }
 
-static int i2c_write (I2C_TypeDef *i2c_periph, rt_uint16_t addr, rt_uint8_t flags, rt_uint8_t *buf, rt_uint16_t len) {
-    rt_uint16_t try = 0;
-    while (I2C_GetFlagStatus (i2c_periph, I2C_FLAG_BUSY))
-        if (try++ >= HWI2C_TIMEOUT)
-            return -RT_ERROR;
-
-    I2C_GenerateSTART (i2c_periph, ENABLE);
-
-    try = 0;
-    while (!I2C_CheckEvent (i2c_periph, I2C_EVENT_MASTER_MODE_SELECT))  // EVT5
-        if (try++ >= HWI2C_TIMEOUT)
-            return -RT_ERROR;
-
-    if (flags & RT_I2C_ADDR_10BIT)                           // 10-bit address mode
-    {
-        I2C_SendData (i2c_periph, 0xF0 + (addr >> 8) << 1);  // FrameHead 11110XX0
-
-        try = 0;
-        while (!I2C_CheckEvent (i2c_periph, I2C_EVENT_MASTER_MODE_ADDRESS10))  // EVT9
-            if (try++ >= HWI2C_TIMEOUT)
-                return -RT_ERROR;
-
-        I2C_SendData (i2c_periph, 0xff & addr);
-    } else  // 7-bit address mode
-    {
-        I2C_Send7bitAddress (i2c_periph, addr << 1, I2C_Direction_Transmitter);
+static rt_err_t i2c_write (ch32_i2c_device_t device, rt_uint16_t writeAddr, rt_uint8_t flags, rt_uint8_t *buf, rt_uint16_t len) {
+    rt_err_t result = RT_EOK;
+    rt_uint8_t *midBuf = buf;
+    while (len--) {
+        result = rt_hw_i2c_writeOneByte_start (device->i2cx, device->nowDeviceAddr);
+        if (flags & RT_I2C_ADDR_10BIT) {
+            result = rt_hw_i2c_writeOneByte_16bit (device->i2cx, writeAddr);
+        } else {
+            result = rt_hw_i2c_writeOneByte_8bit (device->i2cx, writeAddr);
+        }
+        rt_hw_i2c_writeOneByte_end (device->i2cx, midBuf[0]);
+        midBuf++;
+        writeAddr++;
+        rt_thread_delay (2);
     }
-
-    try = 0;
-    while (!I2C_CheckEvent (i2c_periph, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))  // EVT6
-        if (try++ >= HWI2C_TIMEOUT)
-            return -RT_ERROR;
-
-    // Missing Evt8_1 (No definition)
-
-    while (len-- > 0) {
-        try = 0;
-        while (!I2C_GetFlagStatus (i2c_periph, I2C_FLAG_TXE))  // Got ACK For the Last Byte
-            if (try++ >= HWI2C_TIMEOUT)
-                return -RT_ERROR;
-
-        I2C_SendData (i2c_periph, *(buf++));
-    }
-
-    try = 0;
-    while (!I2C_CheckEvent (i2c_periph, I2C_EVENT_MASTER_BYTE_TRANSMITTING))  // Last byte sent successfully
-        if (try++ >= HWI2C_TIMEOUT)
-            return -RT_ERROR;
-
-    I2C_GenerateSTOP (i2c_periph, ENABLE);
+    return result;
 }
 
 rt_ssize_t ch32_i2c_master_xfer (struct rt_i2c_bus_device *bus, struct rt_i2c_msg msgs[], rt_uint32_t num) {
     struct rt_i2c_msg *msg;
-    struct ch32_i2c_device *i2c_bus_dev;
+    ch32_i2c_device_t i2cBusDev;
     rt_uint32_t index;
 
-    i2c_bus_dev = (struct ch32_i2c_device *)bus->priv;
+    i2cBusDev = (ch32_i2c_device_t)bus->priv;
 
     for (index = 0; index < num; index++) {
         msg = &msgs[index];
         if (msg->flags & RT_I2C_RD) {
-            i2c_read (i2c_bus_dev->i2cx,
-                      msg->addr,
-                      msg->flags,
-                      msg->len,
-                      msg->buf);
+            i2c_read (i2cBusDev, msg->addr, msg->flags, msg->len, msg->buf);
         } else {
-            i2c_write (i2c_bus_dev->i2cx,
-                       msg->addr,
-                       msg->flags,
-                       msg->buf,
-                       msg->len);
+            i2c_write (i2cBusDev, msg->addr, msg->flags, msg->buf, msg->len);
         }
     }
-
     return index;
+}
+
+rt_err_t ch32_i2c_bus_control (struct rt_i2c_bus_device *bus, int cmd, void *args) {
+    rt_err_t result = RT_EOK;
+    return result;
 }
 
 static const struct rt_i2c_bus_device_ops ch32_i2c_ops =
     {
-        .master_xfer = ch32_i2c_master_xfer,
-        .slave_xfer = RT_NULL,  // Not Used in i2c_core?
-        .i2c_bus_control = RT_NULL};
+        .master_xfer = ch32_i2c_master_xfer,  // 主机传输函数：必须实现
+        .slave_xfer = RT_NULL,                // 不实现从机模式（通常用不到）
+        .i2c_bus_control = RT_NULL            // 控制函数（例如切速率、复位）可选
+};
+
 
 static struct rt_i2c_bus_device i2cBusDevice[sizeof (ch32I2CDevice) / sizeof (struct ch32_i2c_device)] = {0};
 
