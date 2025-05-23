@@ -18,7 +18,7 @@
 void ATC24C32_Test() {
     struct rt_i2c_bus_device *bus;
     struct rt_i2c_msg msgs[2] = {0};
-    char writeData[] = " 1";
+    char writeData[] = "CH32V307VCT6";
     char readData[sizeof (writeData)] = "";
     // 获取 I2C 总线设备
     bus = (struct rt_i2c_bus_device *)rt_device_find ("i2c2");

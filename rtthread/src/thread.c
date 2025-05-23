@@ -725,9 +725,7 @@ RTM_EXPORT (rt_thread_delay_until);
  */
 rt_err_t rt_thread_mdelay (rt_int32_t ms) {
     rt_tick_t tick;
-
     tick = rt_tick_from_millisecond (ms);
-
     return _thread_sleep (tick);
 }
 

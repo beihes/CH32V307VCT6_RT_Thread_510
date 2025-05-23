@@ -21,7 +21,7 @@
 /* this driver can be disabled at menuconfig -> RT-Thread Components -> Device Drivers */
 #endif
 
-#define HWI2C_TIMEOUT 0xFF
+#define HWI2C_TIMEOUT 0xFFF
 
 static struct ch32_i2c_device ch32I2CDevice[] = {
 #ifdef BSP_USING_I2C1
@@ -221,13 +221,14 @@ static rt_err_t i2c_read (ch32_i2c_device_t device, rt_uint16_t readAddr, rt_uin
     rt_err_t result = RT_EOK;
     rt_uint8_t *midBuf = buf;
     while (len--) {
-        result = rt_hw_i2c_readOneByte_start (device->i2cx, device->nowDeviceAddr);
+        result = rt_hw_i2c_readOneByte_start (device->i2cx, device->deviceAddr);
         if (flags & RT_I2C_ADDR_10BIT) {
             result = rt_hw_i2c_readOneByte_16bit (device->i2cx, readAddr);
         } else {
             result = rt_hw_i2c_readOneByte_8bit (device->i2cx, readAddr);
         }
-        midBuf[0] = rt_hw_i2c_readOneByte_end (device->i2cx, device->nowDeviceAddr);
+        midBuf[0] = rt_hw_i2c_readOneByte_end (device->i2cx, device->deviceAddr);
+        // rt_kprintf ("read:%04x:%x\n", len, midBuf[0]);
         midBuf++;
         readAddr++;
     }
@@ -238,16 +239,17 @@ static rt_err_t i2c_write (ch32_i2c_device_t device, rt_uint16_t writeAddr, rt_u
     rt_err_t result = RT_EOK;
     rt_uint8_t *midBuf = buf;
     while (len--) {
-        result = rt_hw_i2c_writeOneByte_start (device->i2cx, device->nowDeviceAddr);
+        result = rt_hw_i2c_writeOneByte_start (device->i2cx, device->deviceAddr);
         if (flags & RT_I2C_ADDR_10BIT) {
             result = rt_hw_i2c_writeOneByte_16bit (device->i2cx, writeAddr);
         } else {
             result = rt_hw_i2c_writeOneByte_8bit (device->i2cx, writeAddr);
         }
-        rt_hw_i2c_writeOneByte_end (device->i2cx, midBuf[0]);
+        result = rt_hw_i2c_writeOneByte_end (device->i2cx, midBuf[0]);
+        // rt_kprintf ("write:%04x:%x\n", len, midBuf[0]);
         midBuf++;
         writeAddr++;
-        rt_thread_delay (2);
+        rt_thread_mdelay (4);
     }
     return result;
 }
