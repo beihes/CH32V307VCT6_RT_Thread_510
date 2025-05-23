@@ -18,6 +18,21 @@
 extern "C" {
 #endif
 
+#include <rtthread.h>
+
+// 线程
+extern rt_thread_t led;   // LED
+extern rt_thread_t oled;  // OLED
+extern rt_thread_t dog;   // 舵机
+extern rt_thread_t wifi;  // 使用esp8285
+
+// 恢复任务
+void Start_Thread (rt_thread_t thread);
+
+// 暂停任务
+void Stop_Thread (rt_thread_t thread);
+
+void Control_Thread (int argc, char *argv[]);
 
 #ifdef __cplusplus
 }

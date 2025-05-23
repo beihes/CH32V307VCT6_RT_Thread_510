@@ -12,3 +12,18 @@
  * 2025-05-17     BHS          the first version
  */
 #include "serwa.h"
+
+void Dog_Stop() {
+}
+
+void Dog_Forward() {
+}
+
+void Dog_Right() {
+}
+
+void Dog_Back() {
+}
+
+void Dog_Left() {
+}

@@ -1,5 +1,5 @@
 /*
- * File      : eeprom.h
+ * File      : oled.h
  * This file is part of RT-Thread RTOS
  * COPYRIGHT (C) 2015, RT-Thread Development Team
  *
@@ -11,19 +11,13 @@
  * Date           Author       Notes
  * 2025-05-17     BHS          the first version
  */
-#ifndef __EEPROM_H
-#define __EEPROM_H
+#include "oled.h"
+#include <rtthread.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+int OLED_Init() {
+    rt_err_t result = RT_EOK;
 
-#define AT24C32_ADDR 0xA0
-
-int EEPROM_Init();
-
-#ifdef __cplusplus
+    return result;
 }
-#endif
 
-#endif /* __EEPROM_H */
+INIT_APP_EXPORT (OLED_Init);

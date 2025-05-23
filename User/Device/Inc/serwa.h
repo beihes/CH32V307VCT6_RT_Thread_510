@@ -18,6 +18,37 @@
 extern "C" {
 #endif
 
+typedef enum SerwaDegreeType {
+    DEGREE_0,
+    DEGREE_45,
+    DEGREE_90,
+    DEGREE_135,
+    DEGREE_180,
+    SERWA_DEGREE_NUM,
+} SerwaCmdType;
+
+typedef enum ActiveLegType {
+    SERWA_RIGHT_0,
+    SERWA_RIGHT_1,
+    SERWA_LEFT_0,
+    SERWA_LEFT_1,
+    ACTIVE_LEG_NUM,
+} ActiveLegType;
+
+typedef enum DogCmdType {
+    STOP,
+    FORWARD,
+    RIGHT,
+    BACK,
+    LEFT,
+    DOG_CMD_NUM,
+} DogCmdType;
+
+void Dog_Stop();
+void Dog_Forward();
+void Dog_Right();
+void Dog_Back();
+void Dog_Left();
 
 #ifdef __cplusplus
 }

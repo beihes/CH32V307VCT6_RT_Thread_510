@@ -11,8 +11,8 @@
 | PA8    | -       | -                 |               |          |
 | PA9    | USART1  | TX                | GPIO_Mode_AF_PP | 是       |
 | PA10   | USART1  | RX                | GPIO_Mode_IN_FLOATING | 是       |
-| PA11   | -       | -                 |               |          |
-| PA12   | -       | -                 |               |          |
+| PA11   | USB | 待开发 |  | TYPEC_0 |
+| PA12   | USB | 待开发 |  | TYPEC_0 |
 | PA13   | -       | -                 |               |          |
 | PA14   | -       | -                 |               |          |
 | PA15   | LED     | RED               | GPIO_Mode_Out_PP | 是       |
@@ -22,10 +22,10 @@
 | PB3    | -       | -                 |               |          |
 | PB4    | LED     | GREEN             | GPIO_Mode_Out_PP | 是       |
 | PB5    | -       | -                 |               |          |
-| PB6    | I2C1    | SCL (OLED[0x78])  | GPIO_Mode_AF_OD | 是       |
-| PB7    | I2C1    | SDA (OLED[0x78])  | GPIO_Mode_AF_OD | 是       |
-| PB8    |  | -                 |               |          |
-| PB9    |  | -                 |               |          |
+| PB6    | USBHD | 待开发 |  | TYPEC_1 |
+| PB7    | USBHD | 待开发 |  | TYPEC_1 |
+| PB8    | I2C1_1 | SCL (OLED[0x78]) | GPIO_Mode_AF_OD | 是 |
+| PB9    | I2C1_1 | SDA (OLED[0x78]) | GPIO_Mode_AF_OD | 是 |
 | PB10   | I2C2 | SCL (AT24C32[0xA0]) | GPIO_Mode_AF_OD | 是       |
 | PB11   | I2C2 | SDA (AT24C32[0xA0]) | GPIO_Mode_AF_OD | 是       |
 | PB12   | -       | -                 |               |          |
@@ -53,11 +53,11 @@
 | PD2    | SDIO | CMD | GPIO_Mode_AF_PP | 预留 |
 | PD3    | -       | -                 |               |          |
 | PD4    | -       | -                 |               |          |
-| PD5    | USART2_1 | TX | GPIO_Mode_AF_PP |          |
-| PD6    | USART2_1 | RX | GPIO_Mode_IN_FLOATING |          |
+| PD5    | USART2_1 | TX | GPIO_Mode_AF_PP | 是 |
+| PD6    | USART2_1 | RX | GPIO_Mode_IN_FLOATING | 是 |
 | PD7    | -       | -                 |               |          |
-| PD8    | USART3_3 | TX | GPIO_Mode_AF_PP |          |
-| PD9    | USART3_3 | RX | GPIO_Mode_IN_FLOATING |          |
+| PD8    | USART3_3 | TX | GPIO_Mode_AF_PP | 是 |
+| PD9    | USART3_3 | RX | GPIO_Mode_IN_FLOATING | 是 |
 | PD10   | -       | -                 |               |          |
 | PD11   |  | -                 |               |          |
 | PD12   | TIM4_1 | PWM_CH1(serwa) | GPIO_Mode_AF_PP | 是 |

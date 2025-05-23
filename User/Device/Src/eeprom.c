@@ -15,6 +15,26 @@
 #include <drv_i2c.h>
 #include <rtthread.h>
 
+typedef struct I2CData {
+    struct rt_i2c_bus_device *bus;
+    struct rt_i2c_msg msg;
+} I2CData;
+
+I2CData eeprom = {0};
+
+int EEPROM_Init() {
+    rt_err_t result = RT_EOK;
+    eeprom.bus = (struct rt_i2c_bus_device *)rt_device_find ("i2c1");
+    if (eeprom.bus == RT_NULL) {
+        rt_kprintf ("can't find i2c2\n");
+        return -RT_ERROR;
+    }
+    rt_device_open ((rt_device_t)eeprom.bus, RT_DEVICE_FLAG_RDWR);
+    return result;
+}
+
+INIT_APP_EXPORT (EEPROM_Init);
+
 void ATC24C32_Test() {
     struct rt_i2c_bus_device *bus;
     struct rt_i2c_msg msgs[2] = {0};
@@ -27,7 +47,7 @@ void ATC24C32_Test() {
         return;
     }
     // 1. 写寄存器地址
-    msgs[0].addr = 100;                             // 从设备写地址
+    msgs[0].addr = 100;                             // 寄存器地址
     msgs[0].flags = RT_I2C_WR | RT_I2C_ADDR_10BIT;  // 写
     msgs[0].buf = (rt_uint8_t *)&writeData;         // 寄存器地址
     msgs[0].len = sizeof (writeData);               // 数据长度

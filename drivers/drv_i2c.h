@@ -19,6 +19,8 @@ extern "C" {
 #include <rtdevice.h>
 #include <ch32v30x.h>
 
+#define BSP_I2C1_Remap 1
+
 struct i2c_config {
     rt_uint32_t clockSpeed;    // I2C 时钟频率
     rt_uint16_t mode;          // 工作模式（主从机、I2C/SPI 模式等）

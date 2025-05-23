@@ -23,7 +23,7 @@
  *
  * @return  none
  */
-int led (void) {
+int Led_Test (void) {
     rt_uint8_t count;
     rt_pin_mode (LED_GREEN_PIN, PIN_MODE_OUTPUT);
     LOG_I ("led_SP:%08lx\r\n", __get_SP());
@@ -37,4 +37,4 @@ int led (void) {
     return 0;
 }
 
-MSH_CMD_EXPORT (led, led sample by using I / O drivers);
+MSH_CMD_EXPORT (Led_Test, led sample by using I / O drivers);

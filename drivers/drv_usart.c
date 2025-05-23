@@ -64,7 +64,7 @@ static struct ch32_uart_hw_config uart_hw_config[] =
             GPIOA,
                               GPIO_Pin_9,
                               /* Tx */ GPIOA,
-                              GPIO_Pin_10,                              /* Rx */
+                              GPIO_Pin_10, /* Rx */
             /* Whether to enable port remapping, you can refer to ch32v30x_gpio.h file,
             for example, USART1 needs to be turned on, you can use GPIO_Remap_USART1 */
             GPIO_Remap_NONE,
@@ -74,30 +74,52 @@ static struct ch32_uart_hw_config uart_hw_config[] =
         {
                               /* clock configuration, please refer to ch32v30x_rcc.h */
             RCC_APB1Periph_USART2,
-                              RCC_APB2Periph_GPIOA,
+#if (BSP_USART2_Remap == 1)
+                              RCC_APB2Periph_GPIOD,
                               /* GPIO  configuration : TX_Port,TX_Pin, RX_Port,RX_Pin */
+            GPIOD,
+                              GPIO_Pin_5, /* Tx */
+            GPIOD,
+                              GPIO_Pin_6, /* Rx */
+            GPIO_Remap_USART2,
+#else
+            RCC_APB2Periph_GPIOA,
+            /* GPIO  configuration : TX_Port,TX_Pin, RX_Port,RX_Pin */
             GPIOA,
-                              GPIO_Pin_2,
-                              /* Tx */ GPIOA,
-                              GPIO_Pin_3,                               /* Rx */
+            GPIO_Pin_2,
+            /* Tx */ GPIOA,
+            GPIO_Pin_3, /* Rx */
             /* Whether to enable port remapping, you can refer to ch32v30x_gpio.h file,
             for example, USART1 needs to be turned on, you can use GPIO_Remap_USART1 */
             GPIO_Remap_NONE,
+#endif
                               },
 #endif
 #ifdef BSP_USING_UART3
         {
                               /* clock configuration, please refer to ch32v30x_rcc.h */
             RCC_APB1Periph_USART3,
-                              RCC_APB2Periph_GPIOB,
-                              /* GPIO  configuration : TX_Port,TX_Pin, RX_Port,RX_Pin */
+#if (BSP_USART3_Remap == 1)
+#elif (BSP_USART3_Remap == 2)
+#elif (BSP_USART3_Remap == 3)
+            RCC_APB2Periph_GPIOD,
+            /* GPIO  configuration : TX_Port,TX_Pin, RX_Port,RX_Pin */
+            GPIOD,
+            GPIO_Pin_8, /* Tx */
+            GPIOD,
+            GPIO_Pin_9, /* Rx */
+            GPIO_FullRemap_USART3,
+#else
+            RCC_APB2Periph_GPIOB,
+            /* GPIO  configuration : TX_Port,TX_Pin, RX_Port,RX_Pin */
             GPIOB,
-                              GPIO_Pin_10,
-                              /* Tx */ GPIOB,
-                              GPIO_Pin_11,                     /* Rx */
+            GPIO_Pin_10,
+            /* Tx */ GPIOB,
+            GPIO_Pin_11, /* Rx */
             /* Whether to enable port remapping, you can refer to ch32v30x_gpio.h file,
             for example, USART1 needs to be turned on, you can use GPIO_Remap_USART1 */
             GPIO_Remap_NONE,
+#endif
                               },
 #endif
 #ifdef BSP_USING_UART4
@@ -109,7 +131,7 @@ static struct ch32_uart_hw_config uart_hw_config[] =
             GPIOC,
                               GPIO_Pin_10,
                               /* Tx */ GPIOC,
-                              GPIO_Pin_11,                                                                       /* Rx */
+                              GPIO_Pin_11, /* Rx */
             /* Whether to enable port remapping, you can refer to ch32v30x_gpio.h file,
             for example, USART1 needs to be turned on, you can use GPIO_Remap_USART1 */
             GPIO_Remap_NONE,
@@ -139,7 +161,7 @@ static struct ch32_uart_hw_config uart_hw_config[] =
             GPIOC,
                               GPIO_Pin_0,
                               /* Tx */ GPIOC,
-                              GPIO_Pin_1,                           /* Rx */
+                              GPIO_Pin_1, /* Rx */
             /* Whether to enable port remapping, you can refer to ch32v30x_gpio.h file,
             for example, USART1 needs to be turned on, you can use GPIO_Remap_USART1 */
             GPIO_Remap_NONE,
@@ -154,7 +176,7 @@ static struct ch32_uart_hw_config uart_hw_config[] =
             GPIOC,
                               GPIO_Pin_2,
                               /* Tx */ GPIOC,
-                              GPIO_Pin_3,                                                      /* Rx */
+                              GPIO_Pin_3, /* Rx */
             /* Whether to enable port remapping, you can refer to ch32v30x_gpio.h file,
             for example, USART1 needs to be turned on, you can use GPIO_Remap_USART1 */
             GPIO_Remap_NONE,
@@ -169,7 +191,7 @@ static struct ch32_uart_hw_config uart_hw_config[] =
             GPIOC,
                               GPIO_Pin_4,
                               /* Tx */ GPIOC,
-                              GPIO_Pin_5,                                       /* Rx */
+                              GPIO_Pin_5, /* Rx */
             /* Whether to enable port remapping, you can refer to ch32v30x_gpio.h file,
             for example, USART1 needs to be turned on, you can use GPIO_Remap_USART1 */
             GPIO_Remap_NONE,
@@ -531,7 +553,5 @@ int rt_hw_usart_init (void) {
 
     return result;
 }
-
-// INIT_BOARD_EXPORT (rt_hw_usart_init);
 
 #endif /* RT_USING_SERIAL */

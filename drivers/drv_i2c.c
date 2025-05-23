@@ -41,12 +41,22 @@ int rt_hw_i2c_gpio_init (struct ch32_i2c_device *device) {
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     if (device->i2cx == I2C1) {
         RCC_APB1PeriphClockCmd (RCC_APB1Periph_I2C1, ENABLE);
+#if (BSP_I2C1_Remap == 1)
+        GPIO_PinRemapConfig (GPIO_Remap_I2C1, ENABLE);
+        // SCL
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+        GPIO_Init (GPIOB, &GPIO_InitStructure);
+        // SDA
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+        GPIO_Init (GPIOB, &GPIO_InitStructure);
+#else
         // SCL
         GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
         GPIO_Init (GPIOB, &GPIO_InitStructure);
         // SDA
         GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
         GPIO_Init (GPIOB, &GPIO_InitStructure);
+#endif
     } else if (device->i2cx == I2C2) {
         RCC_APB1PeriphClockCmd (RCC_APB1Periph_I2C2, ENABLE);
         // SCL

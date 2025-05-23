@@ -15,6 +15,7 @@
 #include <drv_gpio.h>
 #include <rtdbg.h>
 #include "device.h"
+#include "thread.h"
 
 /* Global typedef */
 
@@ -39,11 +40,10 @@ int main (void) {
     rt_kprintf (" ChipID: %08x\r\n", DBGMCU_GetCHIPID());
     rt_kprintf (" www.wch.cn\r\n");
     LOG_I ("main_SP:%08lx\r\n", __get_SP());
-    rt_pin_mode (LED_RED_PIN, PIN_MODE_OUTPUT);
     while (1) {
-        rt_pin_write (LED_RED_PIN, PIN_HIGH);
-        rt_thread_delay (500);
-        rt_pin_write (LED_RED_PIN, PIN_LOW);
-        rt_thread_delay (500);
+        if (uart2.finishFlag == 1) {
+            rt_thread_resume (wifi);
+        }
+        rt_thread_mdelay (10);
     }
 }

@@ -5,7 +5,7 @@
 
 /* RT-Thread Kernel */
 
-#define RT_NAME_MAX 8
+#define RT_NAME_MAX 16
 #define RT_CPUS_NR 1
 #define RT_ALIGN_SIZE 8
 #define RT_THREAD_PRIORITY_32
@@ -112,6 +112,9 @@
 #define RT_USING_I2C
 #define RT_USING_I2C_BITOPS
 #define RT_USING_PWM
+#define RT_USING_RTC
+#define RT_USING_ALARM
+#define RT_USING_SOFT_RTC
 #define RT_USING_SPI
 #define RT_USING_SFUD
 #define RT_SFUD_USING_SFDP
@@ -371,6 +374,8 @@
 #define BSP_USING_GPIO
 #define BSP_USING_UART
 #define BSP_USING_UART1
+#define BSP_USING_UART2
+#define BSP_USING_UART3
 
 #define BSP_USING_I2C
 #define BSP_USING_I2C1
@@ -379,6 +384,8 @@
 
 #define BSP_USING_SPI
 #define BSP_USING_SPI1
+#define BSP_USING_RTC
+#define BSP_USING_RTC_LSI
 #define LSI_VALUE 40000
 #define BSP_USING_TIM
 #define BSP_USING_HWTIMER
