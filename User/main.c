@@ -42,6 +42,7 @@ int main (void) {
     LOG_I ("main_SP:%08lx\r\n", __get_SP());
     while (1) {
         if (uart2.finishFlag == 1) {
+            LOG_D ("恢复线程 wifi\n");
             rt_thread_resume (wifi);
         }
         rt_thread_mdelay (10);

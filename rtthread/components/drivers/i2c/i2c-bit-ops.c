@@ -169,8 +169,7 @@ static rt_int32_t i2c_readb (struct rt_i2c_bus_device *bus) {
     return data;
 }
 
-static rt_ssize_t i2c_send_bytes (struct rt_i2c_bus_device *bus,
-                                  struct rt_i2c_msg *msg) {
+static rt_ssize_t i2c_send_bytes (struct rt_i2c_bus_device *bus, struct rt_i2c_msg *msg) {
     rt_int32_t ret;
     rt_size_t bytes = 0;
     const rt_uint8_t *ptr = msg->buf;
@@ -214,8 +213,7 @@ static rt_err_t i2c_send_ack_or_nack (struct rt_i2c_bus_device *bus, int ack) {
     return RT_EOK;
 }
 
-static rt_ssize_t i2c_recv_bytes (struct rt_i2c_bus_device *bus,
-                                  struct rt_i2c_msg *msg) {
+static rt_ssize_t i2c_recv_bytes (struct rt_i2c_bus_device *bus, struct rt_i2c_msg *msg) {
     rt_int32_t val;
     rt_int32_t bytes = 0; /* actual bytes */
     rt_uint8_t *ptr = msg->buf;
@@ -247,9 +245,7 @@ static rt_ssize_t i2c_recv_bytes (struct rt_i2c_bus_device *bus,
     return bytes;
 }
 
-static rt_int32_t i2c_send_address (struct rt_i2c_bus_device *bus,
-                                    rt_uint8_t addr,
-                                    rt_int32_t retries) {
+static rt_int32_t i2c_send_address (struct rt_i2c_bus_device *bus, rt_uint8_t addr, rt_int32_t retries) {
     struct rt_i2c_bit_ops *ops = (struct rt_i2c_bit_ops *)bus->priv;
     rt_int32_t i;
     rt_err_t ret = 0;
@@ -268,8 +264,7 @@ static rt_int32_t i2c_send_address (struct rt_i2c_bus_device *bus,
     return ret;
 }
 
-static rt_err_t i2c_bit_send_address (struct rt_i2c_bus_device *bus,
-                                      struct rt_i2c_msg *msg) {
+static rt_err_t i2c_bit_send_address (struct rt_i2c_bus_device *bus, struct rt_i2c_msg *msg) {
     rt_uint16_t flags = msg->flags;
     rt_uint16_t ignore_nack = msg->flags & RT_I2C_IGNORE_NACK;
     struct rt_i2c_bit_ops *ops = (struct rt_i2c_bit_ops *)bus->priv;
@@ -323,9 +318,7 @@ static rt_err_t i2c_bit_send_address (struct rt_i2c_bus_device *bus,
     return RT_EOK;
 }
 
-static rt_ssize_t i2c_bit_xfer (struct rt_i2c_bus_device *bus,
-                                struct rt_i2c_msg msgs[],
-                                rt_uint32_t num) {
+static rt_ssize_t i2c_bit_xfer (struct rt_i2c_bus_device *bus, struct rt_i2c_msg msgs[], rt_uint32_t num) {
     struct rt_i2c_msg *msg;
     struct rt_i2c_bit_ops *ops = (struct rt_i2c_bit_ops *)bus->priv;
     rt_int32_t ret;
@@ -391,8 +384,7 @@ static const struct rt_i2c_bus_device_ops i2c_bit_bus_ops =
         RT_NULL,
         RT_NULL};
 
-rt_err_t rt_i2c_bit_add_bus (struct rt_i2c_bus_device *bus,
-                             const char *bus_name) {
+rt_err_t rt_i2c_bit_add_bus (struct rt_i2c_bus_device *bus, const char *bus_name) {
     bus->ops = &i2c_bit_bus_ops;
 
     return rt_i2c_bus_device_register (bus, bus_name);

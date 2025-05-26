@@ -50,6 +50,8 @@ void Dog_Right();
 void Dog_Back();
 void Dog_Left();
 
+int Serwa_Init();
+
 #ifdef __cplusplus
 }
 #endif

@@ -20,6 +20,7 @@ extern "C" {
 
 #include "eeprom.h"
 #include "led.h"
+#include "oled.h"
 #include "serwa.h"
 #include "wifi.h"
 #include "w25xxx.h"

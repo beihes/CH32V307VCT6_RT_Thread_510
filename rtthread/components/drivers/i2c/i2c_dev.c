@@ -20,10 +20,7 @@
 #endif
 #include <rtdbg.h>
 
-static rt_ssize_t i2c_bus_device_read (rt_device_t dev,
-                                       rt_off_t pos,
-                                       void *buffer,
-                                       rt_size_t count) {
+static rt_ssize_t i2c_bus_device_read (rt_device_t dev, rt_off_t pos, void *buffer, rt_size_t count) {
     rt_uint16_t addr;
     rt_uint16_t flags;
     struct rt_i2c_bus_device *bus = (struct rt_i2c_bus_device *)dev->user_data;
@@ -39,10 +36,7 @@ static rt_ssize_t i2c_bus_device_read (rt_device_t dev,
     return rt_i2c_master_recv (bus, addr, flags, (rt_uint8_t *)buffer, count);
 }
 
-static rt_ssize_t i2c_bus_device_write (rt_device_t dev,
-                                        rt_off_t pos,
-                                        const void *buffer,
-                                        rt_size_t count) {
+static rt_ssize_t i2c_bus_device_write (rt_device_t dev, rt_off_t pos, const void *buffer, rt_size_t count) {
     rt_uint16_t addr;
     rt_uint16_t flags;
     struct rt_i2c_bus_device *bus = (struct rt_i2c_bus_device *)dev->user_data;
@@ -58,9 +52,7 @@ static rt_ssize_t i2c_bus_device_write (rt_device_t dev,
     return rt_i2c_master_send (bus, addr, flags, (const rt_uint8_t *)buffer, count);
 }
 
-static rt_err_t i2c_bus_device_control (rt_device_t dev,
-                                        int cmd,
-                                        void *args) {
+static rt_err_t i2c_bus_device_control (rt_device_t dev, int cmd, void *args) {
     rt_err_t ret;
     struct rt_i2c_priv_data *priv_data;
     struct rt_i2c_bus_device *bus = (struct rt_i2c_bus_device *)dev->user_data;
@@ -100,8 +92,7 @@ const static struct rt_device_ops i2c_ops =
         i2c_bus_device_control};
 #endif
 
-rt_err_t rt_i2c_bus_device_device_init (struct rt_i2c_bus_device *bus,
-                                        const char *name) {
+rt_err_t rt_i2c_bus_device_device_init (struct rt_i2c_bus_device *bus, const char *name) {
     struct rt_device *device;
     RT_ASSERT (bus != RT_NULL);
 

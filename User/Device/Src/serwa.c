@@ -12,6 +12,7 @@
  * 2025-05-17     BHS          the first version
  */
 #include "serwa.h"
+#include <rtthread.h>
 
 void Dog_Stop() {
 }
@@ -27,3 +28,10 @@ void Dog_Back() {
 
 void Dog_Left() {
 }
+
+int Serwa_Init() {
+    rt_err_t result = RT_EOK;
+    return result;
+}
+
+INIT_APP_EXPORT (Serwa_Init);

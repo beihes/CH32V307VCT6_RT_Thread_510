@@ -20,6 +20,8 @@ extern "C" {
 
 #define AT24C32_ADDR 0xA0
 
+#define EEPROM_USE_I2C "i2c2Soft"
+
 int EEPROM_Init();
 
 #ifdef __cplusplus

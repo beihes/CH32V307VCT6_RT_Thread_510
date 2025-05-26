@@ -117,7 +117,8 @@ void oled_entry() {
     time_t now = time (NULL);
     rt_uint32_t midFrameRate = 0;
     while (1) {
-        rt_thread_mdelay (500);
+        OLED_ShowString (1, 1, "Hello, CH32!111");  // 显示字符串
+        rt_thread_mdelay (100);
         midFrameRate++;
         now = time (NULL);
         if (now - per >= 1) {
@@ -153,7 +154,6 @@ void dog_entry() {
         }
         dogCmd = DOG_CMD_NUM;
         rt_sem_release (dogSem);
-        rt_thread_mdelay (500);
         if (rt_sem_take (dogSem, RT_WAITING_NO) == RT_EOK) {
             // 息屏
             if (rt_thread_suspend (dog) != RT_EOK)        // 暂停当前线程
@@ -172,7 +172,6 @@ void wifi_entry() {
         uart2.finishFlag = 0;
         uart2.rxBufLength = 0;
         rt_sem_release (wifiSem);
-        // rt_thread_mdelay (500);
         if (rt_sem_take (wifiSem, RT_WAITING_NO) == RT_EOK) {
             // 息屏
             if (rt_thread_suspend (wifi) != RT_EOK)        // 暂停当前线程
@@ -199,7 +198,7 @@ int Thread_Init() {
     oled = rt_thread_create ("oled", oled_entry, "oled 的线程", 1024, 10, 10);
     if (oled != RT_NULL && oledSem != RT_NULL) {
         rt_thread_startup (oled);
-        rt_sem_release (oledSem);
+        // rt_sem_release (oledSem);
     } else {
         rt_kprintf ("creat_thread error");
     }
